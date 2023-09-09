@@ -24,6 +24,10 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  React.useEffect(() => {
+    checkToken();
+  }, [])
+
   const checkToken = () => {
     const jwt = localStorage.getItem("jwt");
     if (jwt === null){
@@ -43,10 +47,6 @@ function App() {
       setLoggedIn(false)
     })
   }
-
-  React.useEffect(() => {
-    checkToken();
-  }, [])
 
   function handleUserData(email){
     setEmail(email);

@@ -116,13 +116,12 @@ const login = async (req, res, next) => {
       { expiresIn: '7d' }
     );
     /*---------------------*/
-
     // res.status(200).json(token);
-    res.status(200).json({ token });
+    res.status(200).send({ token });
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      next(new BadRequestError('Введены некорректные данные'));
-      return;
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Введены некорректные данные'));
+        return;
     }
     next(err);
   }
