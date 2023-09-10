@@ -1,11 +1,14 @@
 const bcrypt = require('bcrypt');
 const JWT = require('jsonwebtoken');
-/*--------.env---------*/
+/* --------.env---------*/
 require('dotenv').config();
 
 /*---------------------*/
 const User = require('../models/user');
-const { BadRequestError, UnauthorizedError, NotFoundError, ConflictError } = require('../utils/constants');
+const { BadRequestError } = require('../utils/badRequest');
+const { UnauthorizedError } = require('../utils/unauthorized');
+const { NotFoundError } = require('../utils/notFound');
+const { ConflictError } = require('../utils/conflict');
 
 function getUsers(req, res, next) {
   return User.find({})
@@ -49,7 +52,7 @@ const createUser = async (req, res, next) => {
       return;
     }
 
-    if (err.code === 11000){
+    if (err.code === 11000) {
       next(new ConflictError('Такая почта уже есть'));
       return;
     }
@@ -108,20 +111,20 @@ const login = async (req, res, next) => {
     }
 
     // /*--------.env---------*/
-    const { NODE_ENV, JWT_SECRET = "29af84f0aad493a9297699fb973aedbeb0f73de1d0d5e7c6d6a290550cf56c10" } = process.env;
+    const { NODE_ENV, JWT_SECRET = '29af84f0aad493a9297699fb973aedbeb0f73de1d0d5e7c6d6a290550cf56c10' } = process.env;
 
     const token = JWT.sign(
       { _id: user._id },
       NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-      { expiresIn: '7d' }
+      { expiresIn: '7d' },
     );
     /*---------------------*/
     // res.status(200).json(token);
     res.status(200).send({ token });
   } catch (err) {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Введены некорректные данные'));
-        return;
+    if (err.name === 'ValidationError') {
+      next(new BadRequestError('Введены некорректные данные'));
+      return;
     }
     next(err);
   }

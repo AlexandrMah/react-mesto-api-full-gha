@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi, errors } = require('celebrate');
 
+const cors = require('cors');
 const userRouter = require('./users');
 const cardRouter = require('./cards');
 const {
@@ -8,18 +9,17 @@ const {
 } = require('../controllers/users');
 const { auth } = require('../middlewares/auth');
 const { error } = require('../middlewares/errors');
-const { NotFoundError } = require('../utils/constants');
+const { NotFoundError } = require('../utils/notFound');
 const { requestLogger, errorLogger } = require('../middlewares/logger');
-/*----------CORS------------*/
-const cors = require('cors');
+/* ----------CORS------------*/
 /*--------------------------*/
 
 router.use(requestLogger);
 
-/*----------CORS------------*/
+/* ----------CORS------------*/
 router.use(cors());
 /*--------------------------*/
-/*------------краш-тест-----------*/
+/* ------------краш-тест-----------*/
 router.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
@@ -55,7 +55,7 @@ router.use('/cards', cardRouter);
 router.use(errorLogger);
 
 router.use((req, res, next) => {
-  next(new NotFoundError('Нет такого адреса'))
+  next(new NotFoundError('Нет такого адреса'));
 });
 
 router.use(errors());

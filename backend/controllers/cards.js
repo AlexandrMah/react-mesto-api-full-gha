@@ -1,5 +1,7 @@
 const Card = require('../models/card');
-const { BadRequestError, ForbiddenError, NotFoundError } = require('../utils/constants');
+const { BadRequestError } = require('../utils/badRequest');
+const { ForbiddenError } = require('../utils/forbidden');
+const { NotFoundError } = require('../utils/notFound');
 
 function getCards(req, res, next) {
   return Card.find({})
@@ -36,7 +38,7 @@ function deleteCard(req, res, next) {
         return;
       }
 
-      return Card.deleteOne({ _id: id })
+      Card.deleteOne({ _id: id })
         .then(() => {
           res.status(200).send({ message: 'Карточка удалена успешно' });
         });
